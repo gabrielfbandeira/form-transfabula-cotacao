@@ -27,7 +27,8 @@ export default function App() {
   const [logoError, setLogoError] = useState(false);
   const [lang, setLang] = useState("pt");
 
-  const logoUrl = "https://drive.google.com/uc?export=view&id=1P7fhoER3300U2DjueP20EeoairS4P4p0";
+  // Link da Logo atualizado para o formato lh3 que dribla o bloqueio do Google Drive
+  const logoUrl = "https://lh3.googleusercontent.com/d/1P7fhoER3300U2DjueP20EeoairS4P4p0";
 
   const [formData, setFormData] = useState({
     nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
@@ -190,14 +191,18 @@ export default function App() {
   };
 
   const getStepImage = () => {
+    // Formato atualizado (lh3) e controle de enquadramento (position).
+    // Se o caminhão for cortado, tente mudar de "center" para "left", "right" ou "bottom".
     switch (step) {
-      case 1: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
-      case 2: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
-      case 3: return "https://drive.google.com/uc?export=view&id=1rqeNL2Z48oq9hUU68V_h8ECWHIi3Lt21";
-      case 4: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
-      default: return "https://drive.google.com/uc?export=view&id=1DM4W3JcFnqYbDhiZLLVWm0vCSZi40Tw-";
+      case 1: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
+      case 2: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
+      case 3: return { url: "https://lh3.googleusercontent.com/d/1rqeNL2Z48oq9hUU68V_h8ECWHIi3Lt21", position: "center" };
+      case 4: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
+      default: return { url: "https://lh3.googleusercontent.com/d/1DM4W3JcFnqYbDhiZLLVWm0vCSZi40Tw-", position: "center" };
     }
   };
+
+  const currentImage = getStepImage();
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-sans text-gray-800">
@@ -206,7 +211,12 @@ export default function App() {
         {/* Painel Esquerdo */}
         <div className="hidden md:block md:w-5/12 relative overflow-hidden bg-blue-900">
           <div className="absolute inset-0 bg-blue-900/50 z-10 mix-blend-multiply"></div>
-          <img src={getStepImage()} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" alt="Background" />
+          <img 
+            src={currentImage.url} 
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000" 
+            style={{ objectPosition: currentImage.position }}
+            alt="Background" 
+          />
           <div className="absolute inset-0 z-20 flex flex-col justify-between p-10 text-white">
             <div className="flex items-center gap-2">
               {!logoError ? (
