@@ -56,7 +56,7 @@ export default function App() {
     nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
     operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
     peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
-    descricao: "", urgencia: "3"
+    descricao: "", targetPreco: "", urgencia: "3"
   });
 
   const t = {
@@ -65,48 +65,50 @@ export default function App() {
       stepXofY: `Passo ${step} de 3`, intro1: "Para iniciarmos seu atendimento personalizado, com quem estamos falando?",
       name: "Seu Nome *", company: "Empresa", contactPref: "Como prefere receber o retorno?",
       email: "E-mail", whatsapp: "WhatsApp", emailLabel: "Endereço de E-mail *", whatsappLabel: "Número do WhatsApp *",
-      opType: "Tipo de Operação *", export: "Exportação", import: "Importação",
-      originBr: "Origem (Brasil) *", originExt: "Origem (Exterior) *", destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *",
+      opType: "Tipo de Operação *", export: "Exportação", import: "Importação", domestic: "Nacional",
+      originBr: "Origem (Brasil) *", originExt: "Origem (Exterior) *", originSimple: "Cidade de Origem *",
+      destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *", destSimple: "Cidade de Destino *",
       border: "Fronteira Desejada (Desembaraço) *", vehicle: "Tipo de Veículo (FTL)",
       grossWeight: "Peso Bruto (kg)", volume: "Volume (CBM)", packaging: "Embalagem",
       urgencyLabel: "Qual a urgência dessa cotação?", urgencyMin: "Pesquisa", urgencyMax: "Urgente",
       productLabel: "Qual produto será transportado? *",
-      docsInfo: "Sobre Documentos (Invoice/Packing List)",
-      docsSubInfo: "Para segurança, solicitaremos os anexos diretamente por e-mail logo após a recepção desta cotação.",
-      btnBack: "Voltar", btnNext: "Próximo", btnSubmit: "Finalizar e Enviar", btnSending: "Enviando Dados...",
+      targetLabel: "Target de preço desejado (Opcional)",
+      btnBack: "Voltar", btnNext: "Próximo", btnSubmit: "Finalizar e Enviar", btnSending: "Enviando...",
       successTitle: "Cotação Enviada!", successSub: "Nossa equipe já recebeu seus dados e retornaremos em breve com o orçamento.",
       summary: "Resumo do Envio", client: "Cliente", route: "Rota / Fronteira", via: "Via", status: "Status", btnConfirm: "Fazer Nova Cotação",
       phName: "Ex: João Silva", phCompany: "Ex: Minha Empresa Ltda", phOrigExp: "Ex: São Paulo, SP", phOrigImp: "Ex: Buenos Aires, AR",
       phDestExp: "Ex: Santiago, CL", phDestImp: "Ex: Curitiba, PR", phBorder: "Ex: Uruguaiana/RS, Paso de los Libres...",
       phPeso: "12.000", phVol: "45", phPhone: "+55 (00) 00000-0000",
       phProduct: "Ex: Peças automotivas, Grãos, Eletrônicos...",
-      hero1: "Cotação FTL rápida e sem burocracia.", hero2: "Especialistas em rotas rodoviárias no Mercosul.",
+      phTarget: "Ex: R$ 10.000,00 ou US$ 2.000,00",
+      hero1: "Cotação FTL rápida e sem burocracia.", hero2: "Especialistas em rotas terrestres no Mercosul.",
       hero3: "Informação precisa gera a melhor rota.", hero4: "Tudo certo! Recebemos sua Cotação.",
-      heroSub: "Veículos dedicados, segurança e inteligência aduaneira de ponta a ponta.",
+      heroSub: "Veículos dedicados, segurança e inteligência logística de ponta a ponta.",
     },
     es: {
       title: "Solicitud de Cotización", step1: "1. Dados de Contato", step2: "2. Ruta y Vehículo", step3: "3. Detalles de Carga",
       stepXofY: `Paso ${step} de 3`, intro1: "Para comenzar con su atención personalizada, ¿con quién hablamos?",
-      name: "Su Nombre *", company: "Empresa", contactPref: "¿Cómo prefiere ser contactado?",
+      name: "Su Nome *", company: "Empresa", contactPref: "¿Cómo prefiere ser contactado?",
       email: "Correo", whatsapp: "WhatsApp", emailLabel: "Correo Electrónico *", whatsappLabel: "Número de WhatsApp *",
-      opType: "Tipo de Operación *", export: "Exportación (Desde BR)", import: "Importación (Hacia BR)",
-      originBr: "Origen (Brasil) *", originExt: "Origen (Exterior) *", destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *",
+      opType: "Tipo de Operación *", export: "Exportación", import: "Importación", domestic: "Nacional (BR)",
+      originBr: "Origen (Brasil) *", originExt: "Origen (Exterior) *", originSimple: "Ciudad de Origen *",
+      destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *", destSimple: "Ciudad de Destino *",
       border: "Frontera de Cruce (Aduana) *", vehicle: "Tipo de Vehículo (FTL)",
       grossWeight: "Peso Bruto (kg)", volume: "Volumen (CBM)", packaging: "Embalaje",
       urgencyLabel: "¿Cuál es la urgencia de esta cotización?", urgencyMin: "Consulta", urgencyMax: "Urgente",
       productLabel: "¿Qué produto se transportará? *",
-      docsInfo: "Sobre Documentos (Factura/Packing List)",
-      docsSubInfo: "Por seguridad, solicitaremos los archivos adjuntos directamente por correo electrónico tras recibir esta cotización.",
-      btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar y Enviar", btnSending: "Enviando Datos...",
+      targetLabel: "Objetivo de precio deseado (Opcional)",
+      btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar y Enviar", btnSending: "Enviando...",
       successTitle: "¡Cotización Enviada!", successSub: "Nuestro equipo ya recibió sus datos. Nos pondremos en contacto a la brevedad.",
       summary: "Resumen del Envío", client: "Cliente", route: "Ruta / Frontera", via: "Por", status: "Estado", btnConfirm: "Hacer Nova Cotización",
       phName: "Ej: Juan Pérez", phCompany: "Ej: Mi Empresa S.A.", phOrigExp: "Ej: São Paulo, SP (Brasil)", phOrigImp: "Ej: Buenos Aires, AR",
       phDestExp: "Ej: Santiago, CL", phDestImp: "Ej: Curitiba, PR (Brasil)", phBorder: "Ej: Paso de los Libres, Uruguaiana...",
       phPeso: "12.000", phVol: "45", phPhone: "+54 9 11 0000-0000",
       phProduct: "Ej: Repuestos, Granos, Electrónicos...",
+      phTarget: "Ej: R$ 10.000,00 o US$ 2.000,00",
       hero1: "Cotización FTL rápida y sin burocracia.", hero2: "Especialistas en rutas terrestres en el Mercosur.",
-      hero3: "Información precisa genera la mejor rota.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
-      heroSub: "Vehículos exclusivos, seguridad e inteligencia aduanera de punta a punta.",
+      hero3: "Información precisa gera la mejor rota.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
+      heroSub: "Vehículos exclusivos, seguridad e inteligencia logística de punta a punta.",
     }
   };
 
@@ -118,8 +120,11 @@ export default function App() {
   };
 
   const veiculos = {
-    sider: { pt: "Sider", es: "Sider" }, bau: { pt: "Baú", es: "Furgón" },
-    refrigerado: { pt: "Refrigerado", es: "Refrigerado" }, aberto: { pt: "Aberto/Graneleiro", es: "Abierto/Varanda" }
+    sider: { pt: "Sider", es: "Sider" },
+    bau: { pt: "Baú", es: "Furgón" },
+    refrigerado: { pt: "Refrigerado", es: "Refrigerado" },
+    aberto: { pt: "Aberto\nGraneleiro", es: "Abierto\nVaranda" },
+    nao_aplicavel: { pt: "Não\nAplicável", es: "No\nAplica" }
   };
 
   const embalagens = [
@@ -164,7 +169,8 @@ export default function App() {
       }
     }
     if (step === 2) {
-      if (!formData.origem || !formData.destino || !formData.fronteira) {
+      const needsBorder = formData.operacao !== 'nacional';
+      if (!formData.origem || !formData.destino || (needsBorder && !formData.fronteira)) {
         alert(lang === "pt" ? "Por favor, preencha origem, destino e fronteira." : "Por favor, complete origen, destino y frontera.");
         return;
       }
@@ -180,7 +186,7 @@ export default function App() {
       nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
       operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
       peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
-      descricao: "", urgencia: "3"
+      descricao: "", targetPreco: "", urgencia: "3"
     });
   };
 
@@ -194,8 +200,9 @@ export default function App() {
 
     const embPT = embalagens.find(e => e.id === formData.embalagem)?.pt || formData.embalagem;
     const contato = formData.prefContato === "email" ? formData.email : formatWhatsApp(formData.whatsapp, "pt");
+    const isNacional = formData.operacao === "nacional";
+    const veiculoNome = veiculos[formData.veiculo].pt.replace("\n", " ").toUpperCase();
 
-    // CRIAÇÃO DO RELATÓRIO INTUITIVO (BLOQUE DE MENSAGEM)
     const relatorioVisual = `
 ==============================================
 NOVA SOLICITAÇÃO DE COTAÇÃO - TRANS FÁBULA
@@ -213,8 +220,8 @@ Contato Direto: ${contato}
 Operação: ${formData.operacao.toUpperCase()}
 Origem: ${formData.origem}
 Destino: ${formData.destino}
-Fronteira Sugerida: ${formData.fronteira}
-Veículo Solicitado: ${veiculos[formData.veiculo].pt.toUpperCase()}
+${isNacional ? "" : `Fronteira Sugerida: ${formData.fronteira}`}
+Veículo Solicitado: ${veiculoNome}
 
 [ DETALHES DA CARGA ]
 ----------------------------------------------
@@ -222,8 +229,9 @@ Produto: ${formData.descricao}
 Peso Bruto: ${formatWeight(formData.peso)} kg
 Volume: ${formData.volume} m³
 Embalagem: ${embPT}
-Incoterm: ${formData.incoterm}
+${isNacional ? "" : `Incoterm: ${formData.incoterm}`}
 Urgência: ${urgenciaLabels.pt[formData.urgencia]}
+Target de Preço: ${formData.targetPreco || "Não informado"}
 
 ==============================================
 Solicitação via Portal Trans Fábula Vercel
@@ -234,16 +242,10 @@ Solicitação via Portal Trans Fábula Vercel
     submissionData.append("access_key", WEB3FORMS_ACCESS_KEY);
     submissionData.append("subject", `Cotação FTL (${formData.operacao.toUpperCase()}) - ${formData.empresa || formData.nome}`);
     submissionData.append("from_name", "Portal Trans Fábula");
-    submissionData.append("replyto", formData.email || ""); // Permite responder direto ao cliente
-    
-    // Campo principal (O que a equipe lê primeiro)
+    submissionData.append("replyto", formData.email || "");
     submissionData.append("message", relatorioVisual);
-
-    // Campos individuais (para busca e histórico no painel do Web3Forms)
     submissionData.append("_Cliente", formData.nome);
-    submissionData.append("_Empresa", formData.empresa || "N/A");
     submissionData.append("_Rota", `${formData.origem} -> ${formData.destino}`);
-    submissionData.append("_Produto", formData.descricao);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
@@ -400,61 +402,85 @@ Solicitação via Portal Trans Fábula Vercel
               </div>
             )}
 
-            {/* ETAPA 2 */}
+            {/* ETAPA 2: OPERAÇÃO E ROTA */}
             {step === 2 && (
               <div className="space-y-6 animate-fadeIn">
                 <div className="space-y-3 mb-2">
                   <label className="text-sm font-medium text-gray-700 ml-1">{currentT.opType}</label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className={`cursor-pointer border rounded-xl py-3 px-2 flex items-center justify-center gap-2 transition-all ${formData.operacao === "exportacao" ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c] text-[#002b5c]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+                  <div className="grid grid-cols-3 gap-3">
+                    <label className={`cursor-pointer border rounded-xl py-3 px-1 flex flex-col items-center justify-center gap-1 transition-all ${formData.operacao === "exportacao" ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c] text-[#002b5c]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                       <input type="radio" name="operacao" value="exportacao" className="sr-only" checked={formData.operacao === "exportacao"} onChange={handleChange} />
                       <i className={"ph ph-arrow-up-right text-[18px] " + (formData.operacao === "exportacao" ? "text-[#002b5c]" : "text-gray-400")}></i>
-                      <span className="font-semibold text-xs md:text-sm text-center">{currentT.export}</span>
+                      <span className="font-semibold text-[10px] uppercase text-center">{currentT.export}</span>
                     </label>
-                    <label className={`cursor-pointer border rounded-xl py-3 px-2 flex items-center justify-center gap-2 transition-all ${formData.operacao === "importacao" ? "border-[#2ecc71] bg-green-50 ring-1 ring-[#2ecc71] text-[#27ae60]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+                    <label className={`cursor-pointer border rounded-xl py-3 px-1 flex flex-col items-center justify-center gap-1 transition-all ${formData.operacao === "importacao" ? "border-[#2ecc71] bg-green-50 ring-1 ring-[#2ecc71] text-[#27ae60]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                       <input type="radio" name="operacao" value="importacao" className="sr-only" checked={formData.operacao === "importacao"} onChange={handleChange} />
                       <i className={"ph ph-arrow-down-right text-[18px] " + (formData.operacao === "importacao" ? "text-[#27ae60]" : "text-gray-400")}></i>
-                      <span className="font-semibold text-xs md:text-sm text-center">{currentT.import}</span>
+                      <span className="font-semibold text-[10px] uppercase text-center">{currentT.import}</span>
+                    </label>
+                    <label className={`cursor-pointer border rounded-xl py-3 px-1 flex flex-col items-center justify-center gap-1 transition-all ${formData.operacao === "nacional" ? "border-amber-500 bg-amber-50 ring-1 ring-amber-500 text-amber-700" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+                      <input type="radio" name="operacao" value="nacional" className="sr-only" checked={formData.operacao === "nacional"} onChange={handleChange} />
+                      <i className={"ph ph-map-pin text-[18px] " + (formData.operacao === "nacional" ? "text-amber-600" : "text-gray-400")}></i>
+                      <span className="font-semibold text-[10px] uppercase text-center">{currentT.domestic}</span>
                     </label>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700 ml-1">{formData.operacao === "exportacao" ? currentT.originBr : currentT.originExt}</label>
+                    <label className="text-sm font-medium text-gray-700 ml-1">
+                      {formData.operacao === "exportacao" ? currentT.originBr : (formData.operacao === "importacao" ? currentT.originExt : currentT.originSimple)}
+                    </label>
                     <div className="relative">
                       <i className="ph ph-map-pin absolute left-3 top-3.5 text-gray-400 text-[18px]"></i>
-                      <input type="text" name="origem" value={formData.origem} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={formData.operacao === "exportacao" ? currentT.phOrigExp : currentT.phOrigImp} />
+                      <input 
+                        type="text" name="origem" value={formData.origem} onChange={handleChange} 
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" 
+                        placeholder={formData.operacao === "importacao" ? currentT.phOrigImp : currentT.phOrigExp} 
+                      />
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700 ml-1">{formData.operacao === "exportacao" ? currentT.destExt : currentT.destBr}</label>
+                    <label className="text-sm font-medium text-gray-700 ml-1">
+                      {formData.operacao === "exportacao" ? currentT.destExt : (formData.operacao === "importacao" ? currentT.destBr : currentT.destSimple)}
+                    </label>
                     <div className="relative">
                       <i className="ph ph-map-pin absolute left-3 top-3.5 text-gray-400 text-[18px]"></i>
-                      <input type="text" name="destino" value={formData.destino} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={formData.operacao === "exportacao" ? currentT.phDestExp : currentT.phDestImp} />
+                      <input 
+                        type="text" name="destino" value={formData.destino} onChange={handleChange} 
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" 
+                        placeholder={formData.operacao === "exportacao" ? currentT.phDestExp : currentT.phDestImp} 
+                      />
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-medium text-gray-700 ml-1">{currentT.border}</label>
-                  <div className="relative">
-                    <i className="ph ph-map-trifold absolute left-3 top-3.5 text-gray-400 text-[18px]"></i>
-                    <input type="text" name="fronteira" value={formData.fronteira} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phBorder} />
+                {formData.operacao !== "nacional" && (
+                  <div className="space-y-1 animate-fadeIn">
+                    <label className="text-sm font-medium text-gray-700 ml-1">{currentT.border}</label>
+                    <div className="relative">
+                      <i className="ph ph-map-trifold absolute left-3 top-3.5 text-gray-400 text-[18px]"></i>
+                      <input type="text" name="fronteira" value={formData.fronteira} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phBorder} />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div className="space-y-3 pt-2">
                   <label className="text-sm font-medium text-gray-700 ml-1">{currentT.vehicle}</label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                     {Object.keys(veiculos).map((tipo) => (
-                      <label key={tipo} className={`cursor-pointer border rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all text-center ${formData.veiculo === tipo ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c]" : "border-gray-200 hover:border-gray-300"}`}>
+                      <label key={tipo} className={`cursor-pointer border rounded-xl p-2 flex flex-col items-center justify-center gap-1.5 transition-all text-center ${formData.veiculo === tipo ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c]" : "border-gray-200 hover:border-gray-300"}`}>
                         <input type="radio" name="veiculo" value={tipo} className="sr-only" checked={formData.veiculo === tipo} onChange={handleChange} />
-                        {tipo === "sider" && <i className={"ph ph-truck text-[24px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
-                        {tipo === "bau" && <i className={"ph ph-package text-[24px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
-                        {tipo === "refrigerado" && <i className={"ph ph-snowflake text-[24px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
-                        {tipo === "aberto" && <i className={"ph ph-box-arrow-up text-[24px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
-                        <span className={`text-[11px] md:text-xs font-semibold capitalize ${formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-500"}`}>{veiculos[tipo][lang]}</span>
+                        {tipo === "sider" && <i className={"ph ph-truck text-[22px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
+                        {tipo === "bau" && <i className={"ph ph-package text-[22px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
+                        {tipo === "refrigerado" && <i className={"ph ph-snowflake text-[22px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
+                        {tipo === "aberto" && <i className={"ph ph-box-arrow-up text-[22px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
+                        {tipo === "nao_aplicavel" && <i className={"ph ph-prohibit text-[22px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
+                        <span className={`text-[10px] md:text-[11px] font-bold leading-tight ${formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-500"}`}>
+                          {veiculos[tipo][lang].split("\n").map((line, i) => (
+                            <span key={i} className="block">{line}</span>
+                          ))}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -462,7 +488,7 @@ Solicitação via Portal Trans Fábula Vercel
               </div>
             )}
 
-            {/* ETAPA 3 */}
+            {/* ETAPA 3: CARGA */}
             {step === 3 && (
               <div className="space-y-5 animate-fadeIn">
                 <div className="grid grid-cols-2 gap-4">
@@ -479,7 +505,7 @@ Solicitação via Portal Trans Fábula Vercel
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className={`grid ${formData.operacao === 'nacional' ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
                   <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">{currentT.packaging}</label>
                     <div className="relative">
@@ -489,15 +515,17 @@ Solicitação via Portal Trans Fábula Vercel
                       <i className="ph ph-caret-down absolute right-3 top-3.5 text-gray-500 text-[18px]"></i>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700 ml-1">Incoterm</label>
-                    <div className="relative">
-                      <select name="incoterm" value={formData.incoterm} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] bg-white outline-none appearance-none pr-10 cursor-pointer font-medium">
-                        {incoterms.map(term => <option key={term} value={term}>{term}</option>)}
-                      </select>
-                      <i className="ph ph-caret-down absolute right-3 top-3.5 text-gray-500 text-[18px]"></i>
+                  {formData.operacao !== "nacional" && (
+                    <div className="space-y-1 animate-fadeIn">
+                      <label className="text-sm font-medium text-gray-700 ml-1">Incoterm</label>
+                      <div className="relative">
+                        <select name="incoterm" value={formData.incoterm} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] bg-white outline-none appearance-none pr-10 cursor-pointer font-medium">
+                          {incoterms.map(term => <option key={term} value={term}>{term}</option>)}
+                        </select>
+                        <i className="ph ph-caret-down absolute right-3 top-3.5 text-gray-500 text-[18px]"></i>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 <div className="bg-[#f8fafc] border border-blue-100 rounded-xl p-4">
@@ -515,12 +543,15 @@ Solicitação via Portal Trans Fábula Vercel
                   <textarea name="descricao" value={formData.descricao} onChange={handleChange} rows="3" className="w-full px-4 py-3 rounded-xl border-2 border-blue-100 focus:border-[#002b5c] outline-none resize-none transition-all" placeholder={currentT.phProduct}></textarea>
                 </div>
 
-                <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start">
-                  <i className="ph ph-shield-check text-orange-500 text-[24px] mt-0.5"></i>
-                  <div>
-                    <h4 className="text-sm font-bold text-orange-800 mb-1">{currentT.docsInfo}</h4>
-                    <p className="text-xs text-orange-700/80 leading-relaxed">{currentT.docsSubInfo}</p>
-                  </div>
+                <div className="space-y-1 pt-2">
+                  <label className="text-base font-bold text-[#002b5c] flex items-center gap-2">
+                    <i className="ph ph-coin text-xl"></i> {currentT.targetLabel}
+                  </label>
+                  <input 
+                    type="text" name="targetPreco" value={formData.targetPreco} onChange={handleChange} 
+                    className="w-full px-4 py-3 rounded-xl border-2 border-blue-50 focus:border-[#002b5c] outline-none shadow-sm transition-all" 
+                    placeholder={currentT.phTarget} 
+                  />
                 </div>
               </div>
             )}
@@ -553,7 +584,7 @@ Solicitação via Portal Trans Fábula Vercel
                 </button>
               ) : (
                 <button onClick={handleSubmit} type="button" disabled={isSubmitting} className={`bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-5 md:px-6 rounded-xl shadow-md transition-all flex items-center gap-2 ml-auto text-sm md:text-base ${isSubmitting ? "opacity-75 cursor-wait" : ""}`}>
-                  {isSubmitting ? currentT.btnSending : currentT.btnSubmit}
+                  {isSubmitting ? "Enviando..." : currentT.btnSubmit}
                   {!isSubmitting && <i className="ph ph-paper-plane-right text-[18px]"></i>}
                 </button>
               )}
@@ -566,6 +597,7 @@ Solicitação via Portal Trans Fábula Vercel
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%; background: #002b5c; cursor: pointer; margin-top: -6px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: transform 0.1s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: #e2e8f0; border-radius: 4px; }
       `}} />
     </div>
