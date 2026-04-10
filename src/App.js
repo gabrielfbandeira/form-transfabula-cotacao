@@ -184,13 +184,19 @@ export default function App() {
       // Disparo do Email via API de forma invisível
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
+        headers: {
+          "Accept": "application/json" // Garante que o Web3Forms responda com o motivo do erro
+        },
         body: submissionData
       });
+
+      const result = await response.json();
 
       if (response.ok) {
         setStep(4); // Vai para a tela de sucesso apenas se o email foi enviado!
       } else {
-        alert(lang === "pt" ? "Erro ao enviar a cotação. Verifique a sua chave de acesso (Access Key)." : "Error al enviar la cotización.");
+        // Agora exibimos o erro EXATO que o servidor do Web3Forms nos devolver
+        alert(lang === "pt" ? `Erro do Servidor: ${result.message}` : `Error del Servidor: ${result.message}`);
       }
     } catch (error) {
       alert(lang === "pt" ? "Erro de conexão com o servidor. Tente novamente." : "Error de conexión.");
