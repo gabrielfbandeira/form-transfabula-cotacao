@@ -17,10 +17,16 @@ export default function App() {
     }
   }, []);
 
+  // =====================================================================
+  // COLE A SUA CHAVE DO WEB3FORMS AQUI ENTRE AS ASPAS
+  // =====================================================================
+  const WEB3FORMS_ACCESS_KEY = "d69a98a2-52d6-4de3-bc3e-f446f6dc05f8"; 
+  
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [lang, setLang] = useState("pt");
+  const [fileObj, setFileObj] = useState(null); // Armazena o arquivo real
 
   const logoUrl = "https://drive.google.com/uc?export=view&id=1P7fhoER3300U2DjueP20EeoairS4P4p0";
 
@@ -44,14 +50,14 @@ export default function App() {
       urgencyLabel: "Qual a urgência dessa cotação?", urgencyMin: "Pesquisa", urgencyMax: "Urgente",
       docs: "Invoice ou Packing List (Opcional)", uploadDrop: "Arraste ou clique para anexar", uploadChange: "Clique para trocar de arquivo",
       obs: "Observações adicionais (NCM, necessidades especiais...)",
-      btnBack: "Voltar", btnNext: "Próximo", btnSubmit: "Finalizar", btnSending: "Enviando...",
-      successTitle: "Solicitação Recebida!", successSub: "Nossa equipe de especialistas já está analisando sua demanda.",
-      summary: "Resumo", client: "Cliente", route: "Rota / Fronteira", via: "Via", status: "Status", btnConfirm: "Confirmar Envio (Email)",
+      btnBack: "Voltar", btnNext: "Próximo", btnSubmit: "Finalizar e Enviar", btnSending: "Enviando Dados...",
+      successTitle: "Cotação Enviada com Sucesso!", successSub: "Nossa equipe já recebeu seus dados e o relatório foi gerado. Retornaremos em breve.",
+      summary: "Resumo do que foi enviado", client: "Cliente", route: "Rota / Fronteira", via: "Via", status: "Status", btnConfirm: "Fazer Nova Cotação",
       phName: "Ex: João Silva", phCompany: "Ex: Minha Empresa Ltda", phOrigExp: "Ex: São Paulo, SP", phOrigImp: "Ex: Buenos Aires, AR",
       phDestExp: "Ex: Santiago, CL", phDestImp: "Ex: Curitiba, PR", phBorder: "Ex: Uruguaiana/RS, Paso de los Libres...",
       phPeso: "Ex: 12000", phVol: "Ex: 45 m³",
       hero1: "Cotação FTL rápida e sem burocracia.", hero2: "Especialistas em rotas rodoviárias no Mercosul.",
-      hero3: "Sua documentação agiliza nosso processo.", hero4: "Tudo certo! Cotação em andamento.",
+      hero3: "Sua documentação agiliza nosso processo.", hero4: "Tudo certo! Recebemos sua Cotação.",
       heroSub: "Veículos dedicados, segurança e inteligência aduaneira de ponta a ponta.",
     },
     es: {
@@ -66,14 +72,14 @@ export default function App() {
       urgencyLabel: "¿Cuál es la urgencia de esta cotización?", urgencyMin: "Consulta", urgencyMax: "Urgente",
       docs: "Factura Comercial o Packing List (Opcional)", uploadDrop: "Arrastre o haga clic para adjuntar", uploadChange: "Haga clic para cambiar archivo",
       obs: "Observaciones adicionales (NCM, necesidades especiales...)",
-      btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar", btnSending: "Enviando...",
-      successTitle: "¡Solicitud Recibida!", successSub: "Nuestro equipo de especialistas ya está analizando su demanda.",
-      summary: "Resumen", client: "Cliente", route: "Ruta / Frontera", via: "Por", status: "Estado", btnConfirm: "Confirmar Envío (Email)",
+      btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar y Enviar", btnSending: "Enviando Datos...",
+      successTitle: "¡Cotización Enviada con Éxito!", successSub: "Nuestro equipo ya recibió sus datos. Nos pondremos en contacto a la brevedad.",
+      summary: "Resumen de lo enviado", client: "Cliente", route: "Ruta / Frontera", via: "Por", status: "Estado", btnConfirm: "Hacer Nueva Cotización",
       phName: "Ej: Juan Pérez", phCompany: "Ej: Mi Empresa S.A.", phOrigExp: "Ej: São Paulo, SP (Brasil)", phOrigImp: "Ej: Buenos Aires, AR",
       phDestExp: "Ej: Santiago, CL", phDestImp: "Ej: Curitiba, PR (Brasil)", phBorder: "Ej: Paso de los Libres, Uruguaiana...",
       phPeso: "Ej: 12000", phVol: "Ej: 45 m³",
       hero1: "Cotización FTL rápida y sin burocracia.", hero2: "Especialistas en rutas terrestres en el Mercosur.",
-      hero3: "Su documentación agiliza nuestro proceso.", hero4: "¡Todo listo! Cotización en marcha.",
+      hero3: "Su documentación agiliza nuestro proceso.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
       heroSub: "Vehículos exclusivos, seguridad e inteligencia aduanera de punta a punta.",
     }
   };
@@ -103,7 +109,10 @@ export default function App() {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    if (file) { setFormData(prev => ({ ...prev, fileName: file.name })); }
+    if (file) { 
+      setFileObj(file); // Guarda o arquivo real para envio
+      setFormData(prev => ({ ...prev, fileName: file.name })); 
+    }
   };
 
   const nextStep = () => {
@@ -124,43 +133,70 @@ export default function App() {
 
   const prevStep = () => setStep(prev => prev - 1);
 
-  const handleSubmit = (e) => {
+  const resetForm = () => {
+    setStep(1);
+    setFileObj(null);
+    setFormData({
+      nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
+      operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
+      peso: "", volume: "", embalagem: "pallet", incoterm: "FCA", fileName: "",
+      descricao: "", urgencia: "3"
+    });
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => { setIsSubmitting(false); setStep(4); }, 1800);
-  };
 
-  const sendCarrierEmail = () => {
+    // Preparando os dados e arquivo para envio em Background
+    const submissionData = new FormData();
     const embPT = embalagens.find(e => e.id === formData.embalagem)?.pt || formData.embalagem;
-    const subject = encodeURIComponent(`Cotação FTL (${formData.operacao.toUpperCase()}) - Urgência Nível ${formData.urgencia} - ${formData.empresa || formData.nome}`);
-    const body = encodeURIComponent(`Olá Equipe de Pricing,
-      
-Nova solicitação de cotação FTL Rodoviário recebida via formulário (${lang.toUpperCase()}).
-      
--- DADOS COMERCIAIS --
-Cliente: ${formData.nome} (${formData.empresa || "Pessoa Física"})
-Retorno via: ${formData.prefContato.toUpperCase()} (${formData.prefContato === "email" ? formData.email : formData.whatsapp})
-Operação: ${formData.operacao.toUpperCase()}
-Incoterm: ${formData.incoterm}
-Urgência: ${urgenciaLabels.pt[formData.urgencia]}
-      
--- ROTA E VEÍCULO --
-Origem: ${formData.origem}
-Destino: ${formData.destino}
-Fronteira sugerida: ${formData.fronteira}
-Tipo de Veículo: ${veiculos[formData.veiculo].pt.toUpperCase()}
-      
--- DETALHES DA CARGA --
-Embalagem: ${embPT}
-Peso Estimado: ${formData.peso} kg
-Volume/Cubagem: ${formData.volume}
-Documento Anexado no sistema: ${formData.fileName || "Nenhum"}
-      
-Observações: ${formData.descricao || "Nenhuma"}
-      
-Favor retornar a cotação o mais breve possível.`);
+    
+    // Configurações do Web3Forms
+    submissionData.append("access_key", WEB3FORMS_ACCESS_KEY);
+    submissionData.append("subject", `Nova Cotação FTL - ${formData.empresa || formData.nome}`);
+    submissionData.append("from_name", "Portal Trans Fábula");
+    
+    // Construção do Relatório que chegará no seu E-mail
+    submissionData.append("1. Operação", formData.operacao.toUpperCase());
+    submissionData.append("2. Cliente", formData.nome);
+    submissionData.append("3. Empresa", formData.empresa || "Não informada");
+    submissionData.append("4. Contato Preferencial", formData.prefContato);
+    submissionData.append("5. Email", formData.email);
+    submissionData.append("6. WhatsApp", formData.whatsapp);
+    submissionData.append("7. Origem", formData.origem);
+    submissionData.append("8. Destino", formData.destino);
+    submissionData.append("9. Fronteira", formData.fronteira);
+    submissionData.append("10. Veículo", veiculos[formData.veiculo].pt.toUpperCase());
+    submissionData.append("11. Peso", formData.peso ? `${formData.peso} kg` : "Não informado");
+    submissionData.append("12. Volume", formData.volume || "Não informado");
+    submissionData.append("13. Embalagem", embPT);
+    submissionData.append("14. Incoterm", formData.incoterm);
+    submissionData.append("15. Urgência", urgenciaLabels.pt[formData.urgencia]);
+    submissionData.append("16. Observações", formData.descricao || "Nenhuma");
 
-    window.location.href = `mailto:pricing@transfabula.com.br?subject=${subject}&body=${body}`;
+    // Anexando o Arquivo (se houver)
+    if (fileObj) {
+      submissionData.append("attachment", fileObj);
+    }
+
+    try {
+      // Disparo do Email via API de forma invisível
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: submissionData
+      });
+
+      if (response.ok) {
+        setStep(4); // Vai para a tela de sucesso apenas se o email foi enviado!
+      } else {
+        alert(lang === "pt" ? "Erro ao enviar a cotação. Verifique a sua chave de acesso (Access Key)." : "Error al enviar la cotización.");
+      }
+    } catch (error) {
+      alert(lang === "pt" ? "Erro de conexão com o servidor. Tente novamente." : "Error de conexión.");
+    }
+
+    setIsSubmitting(false);
   };
 
   const getStepImage = () => {
@@ -454,8 +490,8 @@ Favor retornar a cotação o mais breve possível.`);
                     </div>
                   )}
                   <div className="flex items-center gap-2 border-b border-gray-200 pb-2 mb-3">
-                    <i className="ph ph-file-xls text-blue-600 text-[18px]"></i>
-                    <h3 className="font-semibold text-gray-700 text-sm">{currentT.summary} ({formData.operacao === "exportacao" ? currentT.export : currentT.import})</h3>
+                    <i className="ph ph-file-text text-blue-600 text-[18px]"></i>
+                    <h3 className="font-semibold text-gray-700 text-sm">{currentT.summary}</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-y-2 text-xs md:text-sm">
                     <div className="text-gray-500">{currentT.client}:</div><div className="font-medium text-gray-800">{formData.nome}</div>
@@ -470,8 +506,8 @@ Favor retornar a cotação o mais breve possível.`);
                 </div>
 
                 <div className="w-full pt-2">
-                  <button onClick={sendCarrierEmail} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i className="ph ph-paper-plane-right text-[18px]"></i> {currentT.btnConfirm}
+                  <button onClick={resetForm} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i className="ph ph-arrow-counter-clockwise text-[18px]"></i> {currentT.btnConfirm}
                   </button>
                 </div>
               </div>
@@ -492,7 +528,7 @@ Favor retornar a cotação o mais breve possível.`);
               ) : (
                 <button onClick={handleSubmit} type="button" disabled={isSubmitting} className={`bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-5 md:px-6 rounded-xl shadow-md transition-all flex items-center gap-2 ml-auto text-sm md:text-base ${isSubmitting ? "opacity-75 cursor-wait" : ""}`}>
                   {isSubmitting ? currentT.btnSending : currentT.btnSubmit}
-                  {!isSubmitting && <i className="ph ph-check-circle text-[18px]"></i>}
+                  {!isSubmitting && <i className="ph ph-paper-plane-right text-[18px]"></i>}
                 </button>
               )}
             </div>
