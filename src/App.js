@@ -20,7 +20,7 @@ export default function App() {
   // =====================================================================
   // COLE A SUA CHAVE DO WEB3FORMS AQUI ENTRE AS ASPAS
   // =====================================================================
-  const WEB3FORMS_ACCESS_KEY = "d69a98a2-52d6-4de3-bc3e-f446f6dc05f8"; 
+  const WEB3FORMS_ACCESS_KEY = "0aac5767-8581-4116-82c6-e3920d7393cb"; 
   
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
