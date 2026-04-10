@@ -194,7 +194,7 @@ export default function App() {
     // Formato atualizado (lh3) e controle de enquadramento (position).
     // Se o caminhão for cortado, tente mudar de "center" para "left", "right" ou "bottom".
     switch (step) {
-      case 1: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
+      case 1: return { url: "https://lh3.googleusercontent.com/d/1KvrbJXTsUZPZWCOCAtyIbz57B3fpNcFC", position: "center" };
       case 2: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
       case 3: return { url: "https://lh3.googleusercontent.com/d/1rqeNL2Z48oq9hUU68V_h8ECWHIi3Lt21", position: "center" };
       case 4: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
