@@ -7,10 +7,11 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [lang, setLang] = useState("pt");
 
-  // Configurações de Título, Favicon e Dependências
+  // Configurações de Título, Favicon e Carregamento de Dependências
   useEffect(() => {
     document.title = "Cotação - Trans Fábula";
 
+    // Ícone dinâmico (Favicon)
     const truckIconSvg = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
         <rect width="256" height="256" fill="none"/>
@@ -51,7 +52,8 @@ export default function App() {
     nome: "", empresa: "",
     contactEmail: true, contactWhatsapp: false, 
     email: "", whatsapp: "",
-    operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
+    operacao: "exportacao", origem: "", destino: "", fronteira: "", 
+    veiculo: ["sider"], // Agora é um array para múltipla escolha
     peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
     descricao: "", targetPreco: "", urgencia: "3"
   });
@@ -65,7 +67,7 @@ export default function App() {
       opType: "Tipo de Operação *", export: "Exportação", import: "Importação", domestic: "Nacional",
       originBr: "Origem (Brasil) *", originExt: "Origem (Exterior) *", originSimple: "Cidade de Origem *",
       destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *", destSimple: "Cidade de Destino *",
-      border: "Fronteira Desejada (Desembaraço) *", vehicle: "Tipo de Veículo (FTL)",
+      border: "Fronteira Desejada (Desembaraço) *", vehicle: "Tipo de Veículo (FTL) - Múltipla Escolha",
       grossWeight: "Peso Bruto (kg)", volume: "Volume (CBM)", packaging: "Embalagem",
       urgencyLabel: "Qual a urgência dessa cotação?", urgencyMin: "Pesquisa", urgencyMax: "Urgente",
       productLabel: "Qual produto será transportado? *", targetLabel: "Target de preço desejado (Opcional)",
@@ -82,7 +84,8 @@ export default function App() {
       hero1: "Cotação FTL rápida e sem burocracia.", hero2: "Especialistas em rotas terrestres no Mercosul.",
       hero3: "Informação precisa gera a melhor rota.", hero4: "Tudo certo! Recebemos sua Cotação.",
       heroSub: "Veículos dedicados, segurança e inteligência logística de ponta a ponta.",
-      contactError: "Por favor, selecione pelo menos um meio de contato."
+      contactError: "Por favor, selecione pelo menos um meio de contato.",
+      vehicleError: "Selecione pelo menos um tipo de veículo."
     },
     es: {
       title: "Solicitud de Cotización", step1: "1. Dados de Contato", step2: "2. Ruta y Vehículo", step3: "3. Detalles de Carga",
@@ -92,7 +95,7 @@ export default function App() {
       opType: "Tipo de Operación *", export: "Exportación", import: "Importación", domestic: "Nacional (BR)",
       originBr: "Origen (Brasil) *", originExt: "Origen (Exterior) *", originSimple: "Ciudad de Origen *",
       destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *", destSimple: "Ciudad de Destino *",
-      border: "Frontera de Cruce (Aduana) *", vehicle: "Tipo de Vehículo (FTL)",
+      border: "Frontera de Cruce (Aduana) *", vehicle: "Tipo de Vehículo (FTL) - Opción Múltiple",
       grossWeight: "Peso Bruto (kg)", volume: "Volumen (CBM)", packaging: "Embalaje",
       urgencyLabel: "¿Cuál es la urgencia de esta cotización?", urgencyMin: "Consulta", urgencyMax: "Urgente",
       productLabel: "¿Qué produto se transportará? *", targetLabel: "Objetivo de precio deseado (Opcional)",
@@ -109,7 +112,8 @@ export default function App() {
       hero1: "Cotización FTL rápida y sin burocracia.", hero2: "Especialistas en rutas terrestres en el Mercosur.",
       hero3: "Información precisa gera la mejor rota.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
       heroSub: "Vehículos exclusivos, seguridad e inteligencia logística de punta a punta.",
-      contactError: "Por favor, seleccione al menos un medio de contacto."
+      contactError: "Por favor, seleccione al menos un medio de contacto.",
+      vehicleError: "Seleccione al menos un tipo de vehículo."
     }
   };
 
@@ -117,8 +121,11 @@ export default function App() {
   const logoUrl = "https://lh3.googleusercontent.com/d/1P7fhoER3300U2DjueP20EeoairS4P4p0";
 
   const veiculos = {
-    sider: { pt: "Sider", es: "Sider" }, bau: { pt: "Baú", es: "Furgón" }, refrigerado: { pt: "Refrigerado", es: "Refrigerado" },
-    aberto: { pt: "Aberto\nGraneleiro", es: "Abierto\nVaranda" }, nao_aplicavel: { pt: "Não\nAplicável", es: "No\nAplica" }
+    sider: { pt: "Sider", es: "Sider" },
+    bau: { pt: "Baú", es: "Furgón" },
+    refrigerado: { pt: "Refrigerado", es: "Refrigerado" },
+    aberto: { pt: "Aberto\nGraneleiro", es: "Abierto\nVaranda" },
+    nao_aplicavel: { pt: "Não\nAplicável", es: "No\nAplica" }
   };
 
   const embalagens = [
@@ -167,6 +174,28 @@ export default function App() {
     });
   };
 
+  const toggleVeiculo = (id) => {
+    setFormData(prev => {
+      let list = [...prev.veiculo];
+      
+      // Se clicar em "Não Aplicável", desmarca todo o resto
+      if (id === 'nao_aplicavel') {
+        return { ...prev, veiculo: ['nao_aplicavel'] };
+      }
+
+      // Se clicar em qualquer veículo específico e "Não Aplicável" estiver selecionado, remove ele
+      list = list.filter(v => v !== 'nao_aplicavel');
+
+      if (list.includes(id)) {
+        list = list.filter(v => v !== id);
+      } else {
+        list.push(id);
+      }
+
+      return { ...prev, veiculo: list };
+    });
+  };
+
   const nextStep = () => {
     if (step === 1) {
       if (!formData.nome) return alert(lang === 'pt' ? "Informe seu nome." : "Informe su nombre.");
@@ -180,6 +209,7 @@ export default function App() {
         alert(lang === "pt" ? "Preencha origem, destino e fronteira." : "Complete origen, destino y frontera.");
         return;
       }
+      if (formData.veiculo.length === 0) return alert(currentT.vehicleError);
     }
     setStep(prev => prev + 1);
   };
@@ -190,7 +220,7 @@ export default function App() {
     setStep(1);
     setFormData({
       nome: "", empresa: "", contactEmail: true, contactWhatsapp: false, email: "", whatsapp: "",
-      operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
+      operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: ["sider"],
       peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
       descricao: "", targetPreco: "", urgencia: "3"
     });
@@ -204,7 +234,11 @@ export default function App() {
     const isNacional = formData.operacao === "nacional";
     const waLink = formData.whatsapp ? `https://wa.me/${formData.whatsapp}` : "Não informado";
     const embPT = embalagens.find(e => e.id === formData.embalagem)?.pt || formData.embalagem;
-    const veiculoNome = veiculos[formData.veiculo].pt.replace("\n", " ");
+    
+    // Junta todos os veículos selecionados em um texto para o e-mail
+    const veiculosTexto = formData.veiculo
+      .map(v => veiculos[v].pt.replace("\n", " "))
+      .join(", ");
 
     const relatorioVisual = `
 ==============================================
@@ -226,7 +260,7 @@ LINK DIRETO WHATSAPP: ${waLink}
 Operação: ${formData.operacao.toUpperCase()}
 Rota: ${formData.origem} -> ${formData.destino}
 ${isNacional ? "" : `Fronteira: ${formData.fronteira}`}
-Veículo: ${veiculoNome}
+Veículo(s) Aceito(s): ${veiculosTexto.toUpperCase()}
 
 [ CARGA ]
 ----------------------------------------------
@@ -235,7 +269,7 @@ Peso Bruto: ${formatWeight(formData.peso)} kg | Volume: ${formData.volume} m³
 Embalagem: ${embPT}
 Incoterm: ${isNacional ? "N/A" : formData.incoterm}
 Target de Preço: ${formData.targetPreco || "Não informado"}
-Urgência: ${formData.urgencia} / 4
+Urgência: ${urgenciaLabels[lang][formData.urgencia]}
     `;
 
     const submissionData = new FormData();
@@ -258,8 +292,18 @@ Urgência: ${formData.urgencia} / 4
   };
 
   const urgenciaLabels = {
-    pt: { 1: "🧊 Apenas pesquisa", 2: "📅 Planejamento", 3: "🚚 Pronto (Dias)", 4: "🔥 Urgente (Imediato)" },
-    es: { 1: "🧊 Solo consulta", 2: "📅 Planificación", 3: "🚚 Listo (Días)", 4: "🔥 Urgente (Inmediato)" }
+    pt: { 
+      1: "🧊 Apenas pesquisa de mercado", 
+      2: "📅 Planejamento (Próximas semanas)", 
+      3: "🚚 Pronto para embarcar (Dias)", 
+      4: "🔥 Embarque Urgente (Imediato)" 
+    },
+    es: { 
+      1: "🧊 Solo consulta de mercado", 
+      2: "📅 Planificación (Próximas semanas)", 
+      3: "🚚 Listo para embarcar (Días)", 
+      4: "🔥 Embarque Urgente (Inmediato)" 
+    }
   };
 
   if (!isReady) return (
@@ -282,12 +326,7 @@ Urgência: ${formData.urgencia} / 4
               <img src={logoUrl} className="h-10 object-contain brightness-0 invert" alt="Logo" onError={() => setLogoError(true)} />
             </div>
             <div>
-              <h3 className="text-3xl font-light mb-4 leading-tight">
-                {step === 1 && currentT.hero1} 
-                {step === 2 && currentT.hero2} 
-                {step === 3 && currentT.hero3} 
-                {step === 4 && currentT.hero4}
-              </h3>
+              <h3 className="text-3xl font-light mb-4 leading-tight">{step === 1 && currentT.hero1} {step === 2 && currentT.hero2} {step === 3 && currentT.hero3} {step === 4 && currentT.hero4}</h3>
               <p className="text-blue-100 font-light text-sm">{currentT.heroSub}</p>
             </div>
           </div>
@@ -296,7 +335,7 @@ Urgência: ${formData.urgencia} / 4
         {/* Painel Direito */}
         <div className="w-full md:w-7/12 flex flex-col p-8 md:p-10 lg:p-12 overflow-y-auto relative">
           {step < 4 && (
-            <div className="absolute top-6 right-6 flex items-center bg-gray-50 rounded-full border p-1 z-10">
+            <div className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center bg-gray-50 rounded-full border p-1 z-10">
               <button onClick={() => setLang('pt')} className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${lang === 'pt' ? 'bg-[#002b5c] text-white shadow-sm' : 'text-gray-500'}`}>PT</button>
               <button onClick={() => setLang('es')} className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${lang === 'es' ? 'bg-[#002b5c] text-white shadow-sm' : 'text-gray-500'}`}>ES</button>
             </div>
@@ -335,11 +374,11 @@ Urgência: ${formData.urgencia} / 4
                 <div className="space-y-3 pt-2">
                   <label className="text-sm font-medium text-gray-700 ml-1">{currentT.contactPref}</label>
                   <div className="grid grid-cols-2 gap-4">
-                    <button onClick={() => toggleContact('email')} className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${formData.contactEmail ? 'border-[#002b5c] bg-blue-50' : 'border-gray-200 opacity-60 hover:opacity-100'}`}>
+                    <button onClick={() => toggleContact('email')} className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${formData.contactEmail ? 'border-[#002b5c] bg-blue-50 shadow-inner' : 'border-gray-200 opacity-60'}`}>
                       <i className={`ph ph-envelope-simple text-2xl ${formData.contactEmail ? 'text-[#002b5c]' : 'text-gray-400'}`}></i>
                       <span className="text-sm font-bold uppercase">{currentT.email}</span>
                     </button>
-                    <button onClick={() => toggleContact('whatsapp')} className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${formData.contactWhatsapp ? 'border-[#25d366] bg-green-50' : 'border-gray-200 opacity-60 hover:opacity-100'}`}>
+                    <button onClick={() => toggleContact('whatsapp')} className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${formData.contactWhatsapp ? 'border-[#25d366] bg-green-50 shadow-inner' : 'border-gray-200 opacity-60'}`}>
                       <i className={`ph ph-whatsapp-logo text-2xl ${formData.contactWhatsapp ? 'text-[#25d366]' : 'text-gray-400'}`}></i>
                       <span className="text-sm font-bold uppercase">{currentT.whatsapp}</span>
                     </button>
@@ -350,13 +389,13 @@ Urgência: ${formData.urgencia} / 4
                   {formData.contactEmail && (
                     <div className="space-y-1 animate-fadeIn">
                       <label className="text-sm font-medium text-gray-700 ml-1">{currentT.emailLabel}</label>
-                      <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none" placeholder="email@dominio.com" />
+                      <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder="email@dominio.com" />
                     </div>
                   )}
                   {formData.contactWhatsapp && (
                     <div className="space-y-1 animate-fadeIn">
                       <label className="text-sm font-medium text-gray-700 ml-1">{currentT.whatsappLabel}</label>
-                      <input type="tel" name="whatsapp" value={formatWhatsApp(formData.whatsapp, lang)} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#25d366] outline-none font-mono" placeholder={currentT.phPhone} />
+                      <input type="tel" name="whatsapp" value={formatWhatsApp(formData.whatsapp, lang)} onChange={handleChange} className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#25d366] outline-none font-mono shadow-sm" placeholder={currentT.phPhone} />
                     </div>
                   )}
                 </div>
@@ -412,11 +451,13 @@ Urgência: ${formData.urgencia} / 4
                   <label className="text-sm font-medium text-gray-700 ml-1">{currentT.vehicle}</label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                     {Object.keys(veiculos).map((tipo) => (
-                      <label key={tipo} className={`cursor-pointer border rounded-xl p-2 flex flex-col items-center justify-center gap-1.5 transition-all text-center ${formData.veiculo === tipo ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c]" : "border-gray-200"}`}>
-                        <input type="radio" name="veiculo" value={tipo} className="sr-only" checked={formData.veiculo === tipo} onChange={handleChange} />
-                        <i className={`ph ${tipo === 'sider' ? 'ph-truck' : tipo === 'bau' ? 'ph-package' : tipo === 'refrigerado' ? 'ph-snowflake' : tipo === 'aberto' ? 'ph-box-arrow-up' : 'ph-prohibit'} text-xl`}></i>
-                        <span className="text-[10px] font-bold leading-tight">{veiculos[tipo][lang].split("\n").map((line, i) => (<span key={i} className="block">{line}</span>))}</span>
-                      </label>
+                      <button key={tipo} onClick={() => toggleVeiculo(tipo)} className={`border rounded-xl p-2 flex flex-col items-center justify-center gap-1.5 transition-all text-center ${formData.veiculo.includes(tipo) ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c]" : "border-gray-200 opacity-80"}`}>
+                        <i className={`ph ${tipo === 'sider' ? 'ph-truck' : tipo === 'bau' ? 'ph-package' : tipo === 'refrigerado' ? 'ph-snowflake' : tipo === 'aberto' ? 'ph-box-arrow-up' : 'ph-prohibit'} text-xl ${formData.veiculo.includes(tipo) ? 'text-[#002b5c]' : 'text-gray-400'}`}></i>
+                        <span className={`text-[10px] font-bold leading-tight ${formData.veiculo.includes(tipo) ? "text-[#002b5c]" : "text-gray-500"}`}>{veiculos[tipo][lang].split("\n").map((line, i) => (<span key={i} className="block">{line}</span>))}</span>
+                        {formData.veiculo.includes(tipo) && tipo !== 'nao_aplicavel' && (
+                          <div className="absolute top-1 right-1"><i className="ph ph-check-circle-fill text-[10px] text-[#002b5c]"></i></div>
+                        )}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -426,17 +467,8 @@ Urgência: ${formData.urgencia} / 4
             {step === 3 && (
               <div className="space-y-5 animate-fadeIn">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700 ml-1">{currentT.grossWeight}</label>
-                    <input type="text" name="peso" value={formatWeight(formData.peso)} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phPeso} />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-sm font-medium text-gray-700 ml-1">{currentT.volume}</label>
-                    <div className="relative flex items-center">
-                      <input type="text" name="volume" value={formData.volume} onChange={handleChange} className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phVol} />
-                      <span className="absolute right-4 text-gray-400 font-bold text-sm">m³</span>
-                    </div>
-                  </div>
+                  <div className="space-y-1"><label className="text-sm font-medium text-gray-700 ml-1">{currentT.grossWeight}</label><input type="text" name="peso" value={formatWeight(formData.peso)} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phPeso} /></div>
+                  <div className="space-y-1"><label className="text-sm font-medium text-gray-700 ml-1">{currentT.volume}</label><div className="relative flex items-center"><input type="text" name="volume" value={formData.volume} onChange={handleChange} className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phVol} /><span className="absolute right-4 text-gray-400 font-bold text-sm">m³</span></div></div>
                 </div>
 
                 <div className={`grid ${formData.operacao === 'nacional' ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
@@ -482,3 +514,5 @@ Urgência: ${formData.urgencia} / 4
     </div>
   );
 }
+
+const incoterms = ["EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "Outros"];
