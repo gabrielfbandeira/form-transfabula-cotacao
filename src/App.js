@@ -1,8 +1,42 @@
 import React, { useState, useEffect } from "react";
 
 export default function App() {
-  // Carrega o CSS e os ícones silenciosamente pelo navegador
+  // Configurações de Título e Favicon dinâmico
   useEffect(() => {
+    // Define o título da aba
+    document.title = "Cotação - Trans Fábula";
+
+    // Cria o SVG do ícone de caminhão (adaptável ao tema)
+    const truckIconSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+        <rect width="256" height="256" fill="none"/>
+        <path d="M176,80h38.7a8,8,0,0,1,7.2,4.5l30.7,61.4a7.9,7.9,0,0,1,.7,3.3V184a8,8,0,0,1-8,8H216a32,32,0,0,1-64,0H104a32,32,0,0,1-64,0H24a8,8,0,0,1-8-8V72a8,8,0,0,1,8-8H176V152h64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <circle cx="72" cy="192" r="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <circle cx="184" cy="192" r="32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+        <style>
+          @media (prefers-color-scheme: dark) {
+            svg { color: white; }
+          }
+          @media (prefers-color-scheme: light) {
+            svg { color: #002b5c; }
+          }
+        </style>
+      </svg>
+    `;
+
+    const blob = new Blob([truckIconSvg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    
+    // Procura por um link de ícone existente ou cria um novo
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.getElementsByTagName('head')[0].appendChild(link);
+    }
+    link.href = url;
+
+    // Carrega Tailwind e Phosphor
     if (!document.getElementById("tailwind-cdn")) {
       const tailwind = document.createElement("script");
       tailwind.id = "tailwind-cdn";
@@ -17,9 +51,6 @@ export default function App() {
     }
   }, []);
 
-  // =====================================================================
-  // CHAVE DO WEB3FORMS
-  // =====================================================================
   const WEB3FORMS_ACCESS_KEY = "0aac5767-8581-4116-82c6-e3920d7393cb"; 
   
   const [step, setStep] = useState(1);
@@ -27,13 +58,12 @@ export default function App() {
   const [logoError, setLogoError] = useState(false);
   const [lang, setLang] = useState("pt");
 
-  // Links das Imagens (Google Drive Bypass)
   const logoUrl = "https://lh3.googleusercontent.com/d/1P7fhoER3300U2DjueP20EeoairS4P4p0";
 
   const [formData, setFormData] = useState({
     nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
     operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
-    peso: "", volume: "", embalagem: "pallet", incoterm: "FCA", fileName: "",
+    peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
     descricao: "", urgencia: "3"
   });
 
@@ -42,7 +72,7 @@ export default function App() {
       title: "Solicitação de Cotação", step1: "1. Dados de Contato", step2: "2. Rota e Veículo", step3: "3. Detalhes da Carga",
       stepXofY: `Passo ${step} de 3`, intro1: "Para iniciarmos seu atendimento personalizado, com quem estamos falando?",
       name: "Seu Nome *", company: "Empresa", contactPref: "Como prefere receber o retorno?",
-      email: "E-mail", whatsapp: "WhatsApp", emailLabel: "Endereço de E-mail *", whatsappLabel: "Número do WhatsApp (Apenas números) *",
+      email: "E-mail", whatsapp: "WhatsApp", emailLabel: "Endereço de E-mail *", whatsappLabel: "Número do WhatsApp *",
       opType: "Tipo de Operação *", export: "Exportação", import: "Importação",
       originBr: "Origem (Brasil) *", originExt: "Origem (Exterior) *", destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *",
       border: "Fronteira Desejada (Desembaraço) *", vehicle: "Tipo de Veículo (FTL)",
@@ -56,23 +86,23 @@ export default function App() {
       summary: "Resumo do Envio", client: "Cliente", route: "Rota / Fronteira", via: "Via", status: "Status", btnConfirm: "Fazer Nova Cotação",
       phName: "Ex: João Silva", phCompany: "Ex: Minha Empresa Ltda", phOrigExp: "Ex: São Paulo, SP", phOrigImp: "Ex: Buenos Aires, AR",
       phDestExp: "Ex: Santiago, CL", phDestImp: "Ex: Curitiba, PR", phBorder: "Ex: Uruguaiana/RS, Paso de los Libres...",
-      phPeso: "Ex: 12000", phVol: "Ex: 45 m³", phPhone: "+55 (00) 00000-0000",
+      phPeso: "Ex: 12.000", phVol: "Ex: 45", phPhone: "+55 (00) 00000-0000",
       phProduct: "Ex: Peças automotivas, Grãos, Eletrônicos...",
       hero1: "Cotação FTL rápida e sem burocracia.", hero2: "Especialistas em rotas rodoviárias no Mercosul.",
       hero3: "Informação precisa gera a melhor rota.", hero4: "Tudo certo! Recebemos sua Cotação.",
       heroSub: "Veículos dedicados, segurança e inteligência aduaneira de ponta a ponta.",
     },
     es: {
-      title: "Solicitud de Cotización", step1: "1. Datos de Contacto", step2: "2. Ruta y Vehículo", step3: "3. Detalles de Carga",
+      title: "Solicitud de Cotización", step1: "1. Dados de Contato", step2: "2. Ruta y Vehículo", step3: "3. Detalles de Carga",
       stepXofY: `Paso ${step} de 3`, intro1: "Para comenzar con su atención personalizada, ¿con quién hablamos?",
       name: "Su Nombre *", company: "Empresa", contactPref: "¿Cómo prefiere ser contactado?",
-      email: "Correo", whatsapp: "WhatsApp", emailLabel: "Correo Electrónico *", whatsappLabel: "Número de WhatsApp (Solo números) *",
+      email: "Correo", whatsapp: "WhatsApp", emailLabel: "Correo Electrónico *", whatsappLabel: "Número de WhatsApp *",
       opType: "Tipo de Operación *", export: "Exportación (Desde BR)", import: "Importación (Hacia BR)",
       originBr: "Origen (Brasil) *", originExt: "Origen (Exterior) *", destExt: "Destino (Exterior) *", destBr: "Destino (Brasil) *",
       border: "Frontera de Cruce (Aduana) *", vehicle: "Tipo de Vehículo (FTL)",
       grossWeight: "Peso Bruto (kg)", volume: "Volumen (CBM)", packaging: "Embalaje",
       urgencyLabel: "¿Cuál es la urgencia de esta cotización?", urgencyMin: "Consulta", urgencyMax: "Urgente",
-      productLabel: "¿Qué producto se transportará? *",
+      productLabel: "¿Qué produto se transportará? *",
       docsInfo: "Sobre Documentos (Factura/Packing List)",
       docsSubInfo: "Por seguridad, solicitaremos los archivos adjuntos directamente por correo electrónico tras recibir esta cotización.",
       btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar y Enviar", btnSending: "Enviando Datos...",
@@ -80,10 +110,10 @@ export default function App() {
       summary: "Resumen del Envío", client: "Cliente", route: "Ruta / Frontera", via: "Por", status: "Estado", btnConfirm: "Hacer Nueva Cotización",
       phName: "Ej: Juan Pérez", phCompany: "Ej: Mi Empresa S.A.", phOrigExp: "Ej: São Paulo, SP (Brasil)", phOrigImp: "Ej: Buenos Aires, AR",
       phDestExp: "Ej: Santiago, CL", phDestImp: "Ej: Curitiba, PR (Brasil)", phBorder: "Ej: Paso de los Libres, Uruguaiana...",
-      phPeso: "Ej: 12000", phVol: "Ej: 45 m³", phPhone: "+54 9 11 0000-0000",
+      phPeso: "Ej: 12.000", phVol: "Ej: 45", phPhone: "+54 9 11 0000-0000",
       phProduct: "Ej: Repuestos, Granos, Electrónicos...",
       hero1: "Cotización FTL rápida y sin burocracia.", hero2: "Especialistas en rutas terrestres en el Mercosur.",
-      hero3: "Información precisa genera la mejor ruta.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
+      hero3: "Información precisa genera la mejor rota.", hero4: "¡Todo listo! Hemos recibido su Cotización.",
       heroSub: "Vehículos exclusivos, seguridad e inteligencia aduanera de punta a punta.",
     }
   };
@@ -97,7 +127,7 @@ export default function App() {
 
   const veiculos = {
     sider: { pt: "Sider", es: "Sider" }, bau: { pt: "Baú", es: "Furgón" },
-    refrigerado: { pt: "Refrigerado", es: "Refrigerado" }, aberto: { pt: "Aberto/Graneleiro", es: "Abierto/Granelero" }
+    refrigerado: { pt: "Refrigerado", es: "Refrigerado" }, aberto: { pt: "Aberto/Graneleiro", es: "Abierto/Varanda" }
   };
 
   const embalagens = [
@@ -106,15 +136,36 @@ export default function App() {
     { id: "bolsas_sacos", pt: "Bolsas/Sacos", es: "Bolsas/Sacos" }, { id: "outros", pt: "Outros...", es: "Otros..." }
   ];
 
+  const incoterms = ["EXW", "FCA", "CPT", "CIP", "DAP", "DPU", "DDP", "Outros"];
+
+  const formatWhatsApp = (val, language) => {
+    let digits = val.replace(/\D/g, "");
+    if (language === "pt") {
+      if (digits.length <= 11) {
+        return digits.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+      }
+      return digits.slice(0, 11).replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+    } else {
+      return digits.length > 0 ? "+" + digits : "";
+    }
+  };
+
+  const formatWeight = (val) => {
+    let digits = val.replace(/\D/g, "");
+    return digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Tratamento para aceitar apenas números no WhatsApp
     if (name === "whatsapp") {
-      const onlyNums = value.replace(/\D/g, "");
-      setFormData(prev => ({ ...prev, [name]: onlyNums }));
-      return;
+      setFormData(prev => ({ ...prev, [name]: value.replace(/\D/g, "") }));
+    } else if (name === "peso") {
+      setFormData(prev => ({ ...prev, [name]: value.replace(/\D/g, "") }));
+    } else if (name === "volume") {
+      setFormData(prev => ({ ...prev, [name]: value.replace(/\D/g, "") }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
-    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const nextStep = () => {
@@ -140,7 +191,7 @@ export default function App() {
     setFormData({
       nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
       operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
-      peso: "", volume: "", embalagem: "pallet", incoterm: "FCA", fileName: "",
+      peso: "", volume: "", embalagem: "pallet", incoterm: "FCA",
       descricao: "", urgencia: "3"
     });
   };
@@ -148,7 +199,7 @@ export default function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.descricao) {
-        alert(lang === "pt" ? "Por favor, informe qual produto será transportado." : "Por favor, informe qué producto se transportará.");
+        alert(lang === "pt" ? "Por favor, informe qual produto será transportado." : "Por favor, informe qué produto se transportará.");
         return;
     }
     setIsSubmitting(true);
@@ -170,8 +221,8 @@ export default function App() {
     submissionData.append("8. Destino", formData.destino);
     submissionData.append("9. Fronteira", formData.fronteira);
     submissionData.append("10. Veiculo", veiculos[formData.veiculo].pt.toUpperCase());
-    submissionData.append("11. Peso", formData.peso ? `${formData.peso} kg` : "Nao informado");
-    submissionData.append("12. Volume", formData.volume || "Nao informado");
+    submissionData.append("11. Peso", formData.peso ? `${formatWeight(formData.peso)} kg` : "Nao informado");
+    submissionData.append("12. Volume", formData.volume ? `${formData.volume} m3` : "Nao informado");
     submissionData.append("13. Embalagem", embPT);
     submissionData.append("14. Incoterm", formData.incoterm);
     submissionData.append("15. Urgencia", urgenciaLabels.pt[formData.urgencia]);
@@ -188,10 +239,10 @@ export default function App() {
         setStep(4);
       } else {
         const result = await response.json();
-        alert(lang === "pt" ? `Erro do Servidor: ${result.message}` : `Error del Servidor: ${result.message}`);
+        alert(lang === "pt" ? `Erro: ${result.message}` : `Error: ${result.message}`);
       }
     } catch (error) {
-      alert(lang === "pt" ? "Erro de conexão. Tente novamente." : "Error de conexión.");
+      alert(lang === "pt" ? "Erro de conexão." : "Error de conexión.");
     }
     setIsSubmitting(false);
   };
@@ -201,7 +252,6 @@ export default function App() {
       case 1: return { url: "https://lh3.googleusercontent.com/d/1KvrbJXTsUZPZWCOCAtyIbz57B3fpNcFC", position: "center" };
       case 2: return { url: "https://lh3.googleusercontent.com/d/10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P", position: "center" };
       case 3: return { url: "https://lh3.googleusercontent.com/d/1rqeNL2Z48oq9hUU68V_h8ECWHIi3Lt21", position: "center" };
-      case 4: return { url: "https://lh3.googleusercontent.com/d/1KvrbJXTsUZPZWCOCAtyIbz57B3fpNcFC", position: "center" };
       default: return { url: "https://lh3.googleusercontent.com/d/1KvrbJXTsUZPZWCOCAtyIbz57B3fpNcFC", position: "center" };
     }
   };
@@ -212,7 +262,7 @@ export default function App() {
     <div className="min-h-screen bg-[#f1f5f9] flex items-center justify-center p-4 font-sans text-gray-800">
       <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-5xl w-full flex flex-col md:flex-row min-h-[720px] transition-all duration-500 ease-in-out">
         
-        {/* Painel Esquerdo - Imagens da Frota */}
+        {/* Painel Esquerdo */}
         <div className="hidden md:block md:w-5/12 relative overflow-hidden bg-[#001f3f]">
           <div className="absolute inset-0 bg-[#001f3f]/50 z-10 mix-blend-multiply"></div>
           <img 
@@ -234,20 +284,16 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-3xl font-light mb-4 leading-tight">
-                {step === 1 && currentT.hero1} 
-                {step === 2 && currentT.hero2} 
-                {step === 3 && currentT.hero3} 
-                {step === 4 && currentT.hero4}
+                {step === 1 && currentT.hero1} {step === 2 && currentT.hero2} {step === 3 && currentT.hero3} {step === 4 && currentT.hero4}
               </h3>
               <p className="text-blue-100 font-light text-sm">{currentT.heroSub}</p>
             </div>
           </div>
         </div>
 
-        {/* Painel Direito - Formulário */}
+        {/* Painel Direito */}
         <div className="w-full md:w-7/12 flex flex-col p-8 md:p-10 lg:p-12 overflow-y-auto relative">
           
-          {/* Seletor de Idioma */}
           {step < 4 && (
             <div className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center bg-gray-50 rounded-full border border-gray-200 p-1 z-10">
               <button onClick={() => setLang("pt")} className={`w-8 h-8 rounded-full text-xs font-bold transition-all ${lang === "pt" ? "bg-[#002b5c] text-white shadow-md" : "text-gray-500 hover:bg-gray-200"}`}>PT</button>
@@ -255,7 +301,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Cabeçalho */}
           <div className="mb-6 pb-4 border-b border-gray-100 mt-8 md:mt-0 pr-20">
             <div className="flex flex-col gap-2">
               <div className="h-10 md:h-12 flex items-center justify-start">
@@ -272,18 +317,13 @@ export default function App() {
             </div>
           </div>
 
-          {/* Progresso */}
           {step < 4 && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <h1 className="text-xl font-bold text-[#002b5c]">
-                  {step === 1 && currentT.step1} 
-                  {step === 2 && currentT.step2} 
-                  {step === 3 && currentT.step3}
+                  {step === 1 && currentT.step1} {step === 2 && currentT.step2} {step === 3 && currentT.step3}
                 </h1>
-                <span className="text-xs md:text-sm font-medium text-[#002b5c] bg-blue-50 py-1 px-3 rounded-full whitespace-nowrap ml-2">
-                  {currentT.stepXofY}
-                </span>
+                <span className="text-xs md:text-sm font-medium text-[#002b5c] bg-blue-50 py-1 px-3 rounded-full whitespace-nowrap ml-2">{currentT.stepXofY}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-1.5 mb-2">
                 <div className="bg-[#002b5c] h-1.5 rounded-full transition-all duration-500" style={{ width: `${((step - 1) / 3) * 100}%` }}></div>
@@ -292,8 +332,7 @@ export default function App() {
           )}
 
           <div className="flex-grow flex flex-col justify-start">
-            
-            {/* ETAPA 1: CONTATO */}
+            {/* ETAPA 1 */}
             {step === 1 && (
               <div className="space-y-6 animate-fadeIn">
                 <p className="text-gray-500 text-sm">{currentT.intro1}</p>
@@ -319,10 +358,10 @@ export default function App() {
                       <i className={"ph ph-envelope-simple text-[24px] " + (formData.prefContato === "email" ? "text-[#002b5c]" : "text-gray-400")}></i>
                       <span className={`text-sm font-medium ${formData.prefContato === "email" ? "text-[#002b5c]" : "text-gray-600"}`}>{currentT.email}</span>
                     </label>
-                    <label className={`cursor-pointer border-2 rounded-xl p-4 flex flex-col items-center gap-2 transition-all ${formData.prefContato === "whatsapp" ? "border-[#002b5c] bg-blue-50" : "border-gray-200 hover:border-gray-300"}`}>
+                    <label className={`cursor-pointer border-2 rounded-xl p-4 flex flex-col items-center gap-2 transition-all ${formData.prefContato === "whatsapp" ? "border-[#25d366] bg-green-50 shadow-sm" : "border-gray-200 hover:border-gray-300"}`}>
                       <input type="radio" name="prefContato" value="whatsapp" className="sr-only" checked={formData.prefContato === "whatsapp"} onChange={handleChange} />
-                      <i className={"ph ph-whatsapp-logo text-[24px] " + (formData.prefContato === "whatsapp" ? "text-[#002b5c]" : "text-gray-400")}></i>
-                      <span className={`text-sm font-medium ${formData.prefContato === "whatsapp" ? "text-[#002b5c]" : "text-gray-600"}`}>{currentT.whatsapp}</span>
+                      <i className={"ph ph-whatsapp-logo text-[24px] " + (formData.prefContato === "whatsapp" ? "text-[#25d366]" : "text-gray-400")}></i>
+                      <span className={`text-sm font-medium ${formData.prefContato === "whatsapp" ? "text-[#075e54]" : "text-gray-600"}`}>{currentT.whatsapp}</span>
                     </label>
                   </div>
                 </div>
@@ -342,14 +381,20 @@ export default function App() {
                     <label className="text-sm font-medium text-gray-700 ml-1">{currentT.whatsappLabel}</label>
                     <div className="relative">
                       <i className="ph ph-phone absolute left-3 top-3.5 text-gray-400 text-[18px]"></i>
-                      <input type="tel" name="whatsapp" value={formData.whatsapp} onChange={handleChange} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none shadow-sm" placeholder={currentT.phPhone} />
+                      <input 
+                        type="tel" name="whatsapp" 
+                        value={formatWhatsApp(formData.whatsapp, lang)} 
+                        onChange={handleChange} 
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#25d366] outline-none shadow-sm font-mono" 
+                        placeholder={currentT.phPhone} 
+                      />
                     </div>
                   </div>
                 )}
               </div>
             )}
 
-            {/* ETAPA 2: ROTA */}
+            {/* ETAPA 2 */}
             {step === 2 && (
               <div className="space-y-6 animate-fadeIn">
                 <div className="space-y-3 mb-2">
@@ -360,9 +405,9 @@ export default function App() {
                       <i className={"ph ph-arrow-up-right text-[18px] " + (formData.operacao === "exportacao" ? "text-[#002b5c]" : "text-gray-400")}></i>
                       <span className="font-semibold text-xs md:text-sm text-center">{currentT.export}</span>
                     </label>
-                    <label className={`cursor-pointer border rounded-xl py-3 px-2 flex items-center justify-center gap-2 transition-all ${formData.operacao === "importacao" ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c] text-[#002b5c]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
+                    <label className={`cursor-pointer border rounded-xl py-3 px-2 flex items-center justify-center gap-2 transition-all ${formData.operacao === "importacao" ? "border-[#2ecc71] bg-green-50 ring-1 ring-[#2ecc71] text-[#27ae60]" : "border-gray-200 text-gray-600 hover:bg-gray-50"}`}>
                       <input type="radio" name="operacao" value="importacao" className="sr-only" checked={formData.operacao === "importacao"} onChange={handleChange} />
-                      <i className={"ph ph-arrow-down-right text-[18px] " + (formData.operacao === "importacao" ? "text-[#002b5c]" : "text-gray-400")}></i>
+                      <i className={"ph ph-arrow-down-right text-[18px] " + (formData.operacao === "importacao" ? "text-[#27ae60]" : "text-gray-400")}></i>
                       <span className="font-semibold text-xs md:text-sm text-center">{currentT.import}</span>
                     </label>
                   </div>
@@ -396,7 +441,7 @@ export default function App() {
                 <div className="space-y-3 pt-2">
                   <label className="text-sm font-medium text-gray-700 ml-1">{currentT.vehicle}</label>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {["sider", "bau", "refrigerado", "aberto"].map((tipo) => (
+                    {Object.keys(veiculos).map((tipo) => (
                       <label key={tipo} className={`cursor-pointer border rounded-xl p-3 flex flex-col items-center justify-center gap-2 transition-all text-center ${formData.veiculo === tipo ? "border-[#002b5c] bg-blue-50 ring-1 ring-[#002b5c]" : "border-gray-200 hover:border-gray-300"}`}>
                         <input type="radio" name="veiculo" value={tipo} className="sr-only" checked={formData.veiculo === tipo} onChange={handleChange} />
                         {tipo === "sider" && <i className={"ph ph-truck text-[24px] " + (formData.veiculo === tipo ? "text-[#002b5c]" : "text-gray-400")}></i>}
@@ -411,17 +456,34 @@ export default function App() {
               </div>
             )}
 
-            {/* ETAPA 3: CARGA */}
+            {/* ETAPA 3 */}
             {step === 3 && (
               <div className="space-y-5 animate-fadeIn">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">{currentT.grossWeight}</label>
-                    <input type="number" name="peso" value={formData.peso} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none" placeholder={currentT.phPeso} />
+                    <div className="relative">
+                      <input 
+                        type="text" name="peso" 
+                        value={formatWeight(formData.peso)} 
+                        onChange={handleChange} 
+                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none" 
+                        placeholder={currentT.phPeso} 
+                      />
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <label className="text-sm font-medium text-gray-700 ml-1">{currentT.volume}</label>
-                    <input type="text" name="volume" value={formData.volume} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none" placeholder={currentT.phVol} />
+                    <div className="relative flex items-center">
+                      <input 
+                        type="text" name="volume" 
+                        value={formData.volume} 
+                        onChange={handleChange} 
+                        className="w-full pl-4 pr-12 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] outline-none" 
+                        placeholder={currentT.phVol} 
+                      />
+                      <span className="absolute right-4 text-gray-400 font-bold text-sm pointer-events-none">m³</span>
+                    </div>
                   </div>
                 </div>
 
@@ -439,8 +501,7 @@ export default function App() {
                     <label className="text-sm font-medium text-gray-700 ml-1">Incoterm</label>
                     <div className="relative">
                       <select name="incoterm" value={formData.incoterm} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#002b5c] bg-white outline-none appearance-none pr-10 cursor-pointer font-medium">
-                        <option value="FCA">FCA</option><option value="EXW">EXW</option><option value="CPT">CPT</option><option value="CIP">CIP</option>
-                        <option value="DAP">DAP</option><option value="DDP">DDP</option><option value="FOB">FOB</option><option value="CIF">CIF</option><option value="Outro">Outro</option>
+                        {incoterms.map(term => <option key={term} value={term}>{term}</option>)}
                       </select>
                       <i className="ph ph-caret-down absolute right-3 top-3.5 text-gray-500 text-[18px]"></i>
                     </div>
@@ -462,7 +523,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Ênfase no Produto */}
                 <div className="space-y-1 pt-2">
                   <label className="text-base font-bold text-[#002b5c] ml-1 flex items-center gap-2">
                     <i className="ph ph-package text-xl"></i> {currentT.productLabel}
@@ -470,20 +530,17 @@ export default function App() {
                   <textarea name="descricao" value={formData.descricao} onChange={handleChange} rows="3" className="w-full px-4 py-3 rounded-xl border-2 border-blue-100 focus:border-[#002b5c] focus:ring-0 outline-none shadow-sm resize-none transition-all" placeholder={currentT.phProduct}></textarea>
                 </div>
 
-                {/* Info sobre Documentos - Agora abaixo do produto */}
                 <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start">
                   <i className="ph ph-shield-check text-orange-500 text-[24px] mt-0.5"></i>
                   <div>
                     <h4 className="text-sm font-bold text-orange-800 mb-1">{currentT.docsInfo}</h4>
-                    <p className="text-xs text-orange-700/80 leading-relaxed">
-                      {currentT.docsSubInfo}
-                    </p>
+                    <p className="text-xs text-orange-700/80 leading-relaxed">{currentT.docsSubInfo}</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* ETAPA 4: SUCESSO */}
+            {/* ETAPA 4 */}
             {step === 4 && (
               <div className="flex flex-col items-center justify-center text-center space-y-5 animate-fadeIn py-4">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 shadow-sm">
@@ -491,41 +548,13 @@ export default function App() {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800">{currentT.successTitle}</h2>
                 <p className="text-gray-500 text-sm max-w-[300px]">{currentT.successSub}</p>
-                
-                <div className="w-full bg-[#f8fafc] border border-gray-200 rounded-xl p-5 text-left shadow-inner relative overflow-hidden">
-                  {formData.urgencia === "4" && (
-                    <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg flex items-center gap-1">
-                      <i className="ph ph-fire text-[12px]"></i> {lang === "pt" ? "URGENTE" : "URGENTE"}
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 border-b border-gray-200 pb-2 mb-3">
-                    <i className="ph ph-file-text text-[#002b5c] text-[18px]"></i>
-                    <h3 className="font-semibold text-gray-700 text-sm">{currentT.summary}</h3>
-                  </div>
-                  <div className="grid grid-cols-2 gap-y-2 text-xs md:text-sm">
-                    <div className="text-gray-500">{currentT.client}:</div>
-                    <div className="font-medium text-gray-800">{formData.nome}</div>
-                    
-                    <div className="text-gray-500">{currentT.route}:</div>
-                    <div className="font-medium text-gray-800 truncate" title={`${formData.origem} > ${formData.destino}`}>
-                      {formData.origem} <i className="ph ph-arrow-right inline text-[10px]"></i> {formData.destino}
-                    </div>
-                    
-                    <div className="text-gray-500">{currentT.status}:</div>
-                    <div className="font-medium text-gray-800">{urgenciaLabels[lang][formData.urgencia].substring(3)}</div>
-                  </div>
-                </div>
-
-                <div className="w-full pt-2">
-                  <button onClick={resetForm} className="w-full bg-[#002b5c] hover:bg-[#001f3f] text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i className="ph ph-arrow-counter-clockwise text-[18px]"></i> {currentT.btnConfirm}
-                  </button>
-                </div>
+                <button onClick={resetForm} className="mt-4 w-full bg-[#002b5c] hover:bg-[#001f3f] text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+                  <i className="ph ph-arrow-counter-clockwise text-[18px]"></i> {currentT.btnConfirm}
+                </button>
               </div>
             )}
           </div>
 
-          {/* Botões de Navegação */}
           {step < 4 && (
             <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
               {step === 1 ? <div></div> : (
