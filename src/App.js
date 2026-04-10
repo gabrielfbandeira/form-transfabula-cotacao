@@ -18,7 +18,7 @@ export default function App() {
   }, []);
 
   // =====================================================================
-  // COLE A SUA CHAVE DO WEB3FORMS AQUI ENTRE AS ASPAS
+  // CHAVE DO WEB3FORMS
   // =====================================================================
   const WEB3FORMS_ACCESS_KEY = "0aac5767-8581-4116-82c6-e3920d7393cb"; 
   
@@ -26,7 +26,6 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [lang, setLang] = useState("pt");
-  const [fileObj, setFileObj] = useState(null); // Armazena o arquivo real
 
   const logoUrl = "https://drive.google.com/uc?export=view&id=1P7fhoER3300U2DjueP20EeoairS4P4p0";
 
@@ -48,7 +47,8 @@ export default function App() {
       border: "Fronteira Desejada (Desembaraço) *", vehicle: "Tipo de Veículo (FTL)",
       grossWeight: "Peso Bruto (kg)", volume: "Volume (CBM)", packaging: "Embalagem",
       urgencyLabel: "Qual a urgência dessa cotação?", urgencyMin: "Pesquisa", urgencyMax: "Urgente",
-      docs: "Invoice ou Packing List (Opcional)", uploadDrop: "Arraste ou clique para anexar", uploadChange: "Clique para trocar de arquivo",
+      docsInfo: "Documentos da Carga (Invoice/Packing List)",
+      docsSubInfo: "Para garantir a segurança dos seus dados, solicitaremos os anexos diretamente por e-mail logo após a recepção desta cotação.",
       obs: "Observações adicionais (NCM, necessidades especiais...)",
       btnBack: "Voltar", btnNext: "Próximo", btnSubmit: "Finalizar e Enviar", btnSending: "Enviando Dados...",
       successTitle: "Cotação Enviada com Sucesso!", successSub: "Nossa equipe já recebeu seus dados e o relatório foi gerado. Retornaremos em breve.",
@@ -70,7 +70,8 @@ export default function App() {
       border: "Frontera de Cruce (Aduana) *", vehicle: "Tipo de Vehículo (FTL)",
       grossWeight: "Peso Bruto (kg)", volume: "Volumen (CBM)", packaging: "Embalaje",
       urgencyLabel: "¿Cuál es la urgencia de esta cotización?", urgencyMin: "Consulta", urgencyMax: "Urgente",
-      docs: "Factura Comercial o Packing List (Opcional)", uploadDrop: "Arrastre o haga clic para adjuntar", uploadChange: "Haga clic para cambiar archivo",
+      docsInfo: "Documentos de la Carga (Factura/Packing List)",
+      docsSubInfo: "Para garantizar la seguridad de sus datos, solicitaremos los archivos adjuntos directamente por correo electrónico tras recibir esta cotización.",
       obs: "Observaciones adicionales (NCM, necesidades especiales...)",
       btnBack: "Volver", btnNext: "Siguiente", btnSubmit: "Finalizar y Enviar", btnSending: "Enviando Datos...",
       successTitle: "¡Cotización Enviada con Éxito!", successSub: "Nuestro equipo ya recibió sus datos. Nos pondremos en contacto a la brevedad.",
@@ -99,20 +100,12 @@ export default function App() {
   const embalagens = [
     { id: "pallet", pt: "Pallet", es: "Pallet" }, { id: "caixa", pt: "Caixa", es: "Caja" },
     { id: "tambor", pt: "Tambor", es: "Tambor" }, { id: "bigbag", pt: "Big Bag", es: "Big Bag" },
-    { id: "granel", pt: "Granel", es: "Granel" }, { id: "outros", pt: "Outros...", es: "Otros..." }
+    { id: "bolsas_sacos", pt: "Bolsas/Sacos", es: "Bolsas/Sacos" }, { id: "outros", pt: "Outros...", es: "Otros..." }
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) { 
-      setFileObj(file); // Guarda o arquivo real para envio
-      setFormData(prev => ({ ...prev, fileName: file.name })); 
-    }
   };
 
   const nextStep = () => {
@@ -135,20 +128,18 @@ export default function App() {
 
   const resetForm = () => {
     setStep(1);
-    setFileObj(null);
     setFormData({
       nome: "", empresa: "", prefContato: "email", email: "", whatsapp: "",
       operacao: "exportacao", origem: "", destino: "", fronteira: "", veiculo: "sider",
       peso: "", volume: "", embalagem: "pallet", incoterm: "FCA", fileName: "",
       descricao: "", urgencia: "3"
     });
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Preparando os dados e arquivo para envio em Background
     const submissionData = new FormData();
     const embPT = embalagens.find(e => e.id === formData.embalagem)?.pt || formData.embalagem;
     
@@ -157,8 +148,8 @@ export default function App() {
     submissionData.append("subject", `Nova Cotação FTL - ${formData.empresa || formData.nome}`);
     submissionData.append("from_name", "Portal Trans Fábula");
     
-    // Construção do Relatório que chegará no seu E-mail
-    submissionData.append("1. Operação", formData.operacao.toUpperCase());
+    // Removido os acentos dos títulos para evitar bugs no PDF do Web3Forms
+    submissionData.append("1. Operacao", formData.operacao.toUpperCase());
     submissionData.append("2. Cliente", formData.nome);
     submissionData.append("3. Empresa", formData.empresa || "Não informada");
     submissionData.append("4. Contato Preferencial", formData.prefContato);
@@ -167,25 +158,19 @@ export default function App() {
     submissionData.append("7. Origem", formData.origem);
     submissionData.append("8. Destino", formData.destino);
     submissionData.append("9. Fronteira", formData.fronteira);
-    submissionData.append("10. Veículo", veiculos[formData.veiculo].pt.toUpperCase());
+    submissionData.append("10. Veiculo", veiculos[formData.veiculo].pt.toUpperCase());
     submissionData.append("11. Peso", formData.peso ? `${formData.peso} kg` : "Não informado");
     submissionData.append("12. Volume", formData.volume || "Não informado");
     submissionData.append("13. Embalagem", embPT);
     submissionData.append("14. Incoterm", formData.incoterm);
-    submissionData.append("15. Urgência", urgenciaLabels.pt[formData.urgencia]);
-    submissionData.append("16. Observações", formData.descricao || "Nenhuma");
-
-    // Anexando o Arquivo (se houver)
-    if (fileObj) {
-      submissionData.append("attachment", fileObj);
-    }
+    submissionData.append("15. Urgencia", urgenciaLabels.pt[formData.urgencia]);
+    submissionData.append("16. Observacoes", formData.descricao || "Nenhuma");
 
     try {
-      // Disparo do Email via API de forma invisível
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
-          "Accept": "application/json" // Garante que o Web3Forms responda com o motivo do erro
+          "Accept": "application/json"
         },
         body: submissionData
       });
@@ -193,9 +178,8 @@ export default function App() {
       const result = await response.json();
 
       if (response.ok) {
-        setStep(4); // Vai para a tela de sucesso apenas se o email foi enviado!
+        setStep(4);
       } else {
-        // Agora exibimos o erro EXATO que o servidor do Web3Forms nos devolver
         alert(lang === "pt" ? `Erro do Servidor: ${result.message}` : `Error del Servidor: ${result.message}`);
       }
     } catch (error) {
@@ -207,11 +191,11 @@ export default function App() {
 
   const getStepImage = () => {
     switch (step) {
-      case 1: return "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80";
-      case 2: return "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80";
-      case 3: return "https://images.unsplash.com/photo-1586528116311-ad8ed7c15663?auto=format&fit=crop&w=800&q=80";
-      case 4: return "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80";
-      default: return "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80";
+      case 1: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
+      case 2: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
+      case 3: return "https://drive.google.com/uc?export=view&id=1rqeNL2Z48oq9hUU68V_h8ECWHIi3Lt21";
+      case 4: return "https://drive.google.com/uc?export=view&id=10eZ0XL2Z5hxUDZMPaNHY_oBLjMeKty9P";
+      default: return "https://drive.google.com/uc?export=view&id=1DM4W3JcFnqYbDhiZLLVWm0vCSZi40Tw-";
     }
   };
 
@@ -236,7 +220,10 @@ export default function App() {
             </div>
             <div>
               <h3 className="text-3xl font-light mb-4 leading-tight">
-                {step === 1 && currentT.hero1} {step === 2 && currentT.hero2} {step === 3 && currentT.hero3} {step === 4 && currentT.hero4}
+                {step === 1 && currentT.hero1} 
+                {step === 2 && currentT.hero2} 
+                {step === 3 && currentT.hero3} 
+                {step === 4 && currentT.hero4}
               </h3>
               <p className="text-blue-100 font-light text-sm">{currentT.heroSub}</p>
             </div>
@@ -273,7 +260,9 @@ export default function App() {
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <h1 className="text-xl font-bold text-gray-800">
-                  {step === 1 && currentT.step1} {step === 2 && currentT.step2} {step === 3 && currentT.step3}
+                  {step === 1 && currentT.step1} 
+                  {step === 2 && currentT.step2} 
+                  {step === 3 && currentT.step3}
                 </h1>
                 <span className="text-xs md:text-sm font-medium text-blue-600 bg-blue-50 py-1 px-3 rounded-full whitespace-nowrap ml-2">
                   {currentT.stepXofY}
@@ -286,6 +275,7 @@ export default function App() {
           )}
 
           <div className="flex-grow flex flex-col justify-start">
+            
             {/* ETAPA 1 */}
             {step === 1 && (
               <div className="space-y-6 animate-fadeIn">
@@ -449,28 +439,19 @@ export default function App() {
                     </div>
                   </div>
                   <div className="text-center mt-3 p-2 bg-white rounded-lg border border-blue-100 shadow-sm">
-                    <span className={`text-sm font-semibold ${formData.urgencia == "4" ? "text-red-600" : "text-blue-700"}`}>{urgenciaLabels[lang][formData.urgencia]}</span>
+                    <span className={`text-sm font-semibold ${formData.urgencia === "4" ? "text-red-600" : "text-blue-700"}`}>
+                      {urgenciaLabels[lang][formData.urgencia]}
+                    </span>
                   </div>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-sm font-medium text-gray-700 ml-1 flex items-center gap-1">{currentT.docs}</label>
-                  <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-3 hover:bg-gray-50 transition text-center group cursor-pointer">
-                    <input type="file" onChange={handleFileUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" />
-                    <div className="flex flex-col items-center justify-center space-y-1 pointer-events-none relative z-0">
-                      {formData.fileName ? (
-                        <React.Fragment>
-                          <i className="ph ph-file text-blue-500 text-[24px]"></i>
-                          <span className="text-sm font-medium text-blue-700 truncate max-w-[200px]">{formData.fileName}</span>
-                          <span className="text-xs text-gray-500">{currentT.uploadChange}</span>
-                        </React.Fragment>
-                      ) : (
-                        <React.Fragment>
-                          <i className="ph ph-cloud-arrow-up text-gray-400 group-hover:text-blue-500 transition-colors text-[24px]"></i>
-                          <span className="text-sm font-medium text-gray-600">{currentT.uploadDrop}</span>
-                        </React.Fragment>
-                      )}
-                    </div>
+                <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 flex gap-3 items-start">
+                  <i className="ph ph-info text-orange-500 text-[24px] mt-0.5"></i>
+                  <div>
+                    <h4 className="text-sm font-semibold text-orange-800 mb-1">{currentT.docsInfo}</h4>
+                    <p className="text-xs text-orange-600 leading-relaxed">
+                      {currentT.docsSubInfo}
+                    </p>
                   </div>
                 </div>
 
@@ -490,7 +471,7 @@ export default function App() {
                 <p className="text-gray-500 text-sm">{currentT.successSub}</p>
                 
                 <div className="w-full bg-gray-50 border border-gray-200 rounded-xl p-5 text-left shadow-inner relative overflow-hidden">
-                  {formData.urgencia == "4" && (
+                  {formData.urgencia === "4" && (
                     <div className="absolute top-0 right-0 bg-red-100 text-red-700 text-[10px] font-bold px-3 py-1 rounded-bl-lg flex items-center gap-1">
                       <i className="ph ph-fire text-[12px]"></i> {lang === "pt" ? "URGENTE" : "URGENTE"}
                     </div>
@@ -500,14 +481,20 @@ export default function App() {
                     <h3 className="font-semibold text-gray-700 text-sm">{currentT.summary}</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-y-2 text-xs md:text-sm">
-                    <div className="text-gray-500">{currentT.client}:</div><div className="font-medium text-gray-800">{formData.nome}</div>
+                    <div className="text-gray-500">{currentT.client}:</div>
+                    <div className="font-medium text-gray-800">{formData.nome}</div>
+                    
                     <div className="text-gray-500">{currentT.route}:</div>
                     <div className="font-medium text-gray-800 truncate" title={`${formData.origem} > ${formData.destino} (${formData.fronteira})`}>
                       {formData.origem} <i className="ph ph-arrow-right inline text-[10px]"></i> {formData.destino} <br/>
                       <span className="text-xs text-blue-600">{currentT.via} {formData.fronteira}</span>
                     </div>
-                    <div className="text-gray-500">{currentT.vehicle}:</div><div className="font-medium text-gray-800 capitalize">{veiculos[formData.veiculo][lang]} / {embalagens.find(e => e.id === formData.embalagem)?.[lang]}</div>
-                    <div className="text-gray-500">{currentT.status}:</div><div className="font-medium text-gray-800">{urgenciaLabels[lang][formData.urgencia].substring(3)}</div>
+                    
+                    <div className="text-gray-500">{currentT.vehicle}:</div>
+                    <div className="font-medium text-gray-800 capitalize">{veiculos[formData.veiculo][lang]} / {embalagens.find(e => e.id === formData.embalagem)?.[lang]}</div>
+                    
+                    <div className="text-gray-500">{currentT.status}:</div>
+                    <div className="font-medium text-gray-800">{urgenciaLabels[lang][formData.urgencia].substring(3)}</div>
                   </div>
                 </div>
 
@@ -542,7 +529,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Adicionando o CSS da animação e do slider diretamente na página */}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
